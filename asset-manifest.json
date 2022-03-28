@@ -1,0 +1,13 @@
+{
+  "files": {
+    "main.css": "/SOFKA_demo_app_empresarial_2/static/css/main.88c5f48f.css",
+    "main.js": "/SOFKA_demo_app_empresarial_2/static/js/main.c2b3b5d4.js",
+    "index.html": "/SOFKA_demo_app_empresarial_2/index.html",
+    "main.88c5f48f.css.map": "/SOFKA_demo_app_empresarial_2/static/css/main.88c5f48f.css.map",
+    "main.c2b3b5d4.js.map": "/SOFKA_demo_app_empresarial_2/static/js/main.c2b3b5d4.js.map"
+  },
+  "entrypoints": [
+    "static/css/main.88c5f48f.css",
+    "static/js/main.c2b3b5d4.js"
+  ]
+}
