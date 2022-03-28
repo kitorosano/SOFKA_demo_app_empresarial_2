@@ -1,6 +1,7 @@
 import {
 	POKEMON_ERROR_HIDE,
 	POKEMON_ERROR_SHOW,
+	POKEMON_LOAD_NEXT_RESULTS,
 	POKEMON_RESULTS,
 	VIEW_LOADED,
 	VIEW_LOADING,
@@ -8,14 +9,18 @@ import {
 
 import clienteAxios from '../config/axios';
 
-export const obtenerPokemons = () => async (dispatch) => {
+export const obtenerPokemons = (load) => async (dispatch) => {
 	dispatch(viewLoading());
 
 	try {
-		const respuesta = await clienteAxios.get('pokemon?limit=151&offset=0');
-		console.log(respuesta.data)
+		const respuesta = await clienteAxios.get(load);
+    
+    await dispatch(pokemonSetNextResults(respuesta.data.next))
 
-		dispatch(pokemonSetResults(respuesta.data.results));
+    respuesta.data.results.forEach( async pokemon => {
+      const respuesta2 = await clienteAxios.get(`https://pokeapi.co/api/v2/pokemon/${pokemon.name}`)
+      await dispatch(pokemonSetResults(respuesta2.data))
+    })
 	} catch (error) {
 		dispatch(pokemonSetErrorShow(error.response.data));
 
@@ -23,14 +28,20 @@ export const obtenerPokemons = () => async (dispatch) => {
 			dispatch(pokemonSetErrorHide());
 		}, 5000);
 	} finally {
-		dispatch(viewLoaded());
-	}
+    dispatch(viewLoaded());
+  }
 };
+;
 
 const pokemonSetResults = (results) => ({
 	type: POKEMON_RESULTS,
 	payload: results,
 });
+const pokemonSetNextResults = (next) => ({
+	type: POKEMON_LOAD_NEXT_RESULTS,
+	payload: next,
+});
+
 const pokemonSetErrorShow = (message) => ({
 	type: POKEMON_ERROR_SHOW,
 	payload: message,

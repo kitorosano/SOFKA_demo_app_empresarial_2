@@ -1,29 +1,36 @@
 import React, { useEffect } from 'react'
-import { useDispatch, useSelector } from 'react-redux';
-import { obtenerPokemons } from '../actions/pokemonAction';
-import PokemonItem from './PokemonItem';
+import { useDispatch, useSelector } from 'react-redux'
+import { obtenerPokemons } from '../actions/pokemonAction'
+import PokemonInfo from './PokemonInfo'
 
 function PokemonList() {
-	const results = useSelector((state) => state.pokemon.results);
-	const error = useSelector((state) => state.pokemon.error);
-	const loading = useSelector((state) => state.view.loading);
+  const pokemons = useSelector(state => state.pokemon.results)
+  const loadNext = useSelector(state => state.pokemon.loadNext)
   const dispatch = useDispatch();
 
   useEffect(() => {
-    dispatch(obtenerPokemons());
-  }, []);
+    dispatch(obtenerPokemons(loadNext))
+  }, [])
 
-  return (
-    <div className='flex flex-1 m-5 border-2 border-dashed border-gray-300 rounded-lg '>
-      {!loading && error && <div className='errorAlert'>{error}</div>}
-      
-      <ul className="">
-        {!loading && results && results.map(pokemon => 
-          <PokemonItem key={pokemon.url} pokemon={pokemon} />
-        )}
-      </ul>
-    </div>
-  )
+ return (
+   <div className="app-contaner">
+     <h1>Pokedex</h1>
+     <div className="pokemon-container">
+       <div className="all-container">
+         {pokemons.map( (pokemonStats, index) => 
+           <PokemonInfo
+             key={index}
+             id={pokemonStats.id}
+             image={pokemonStats.sprites.other.dream_world.front_default}
+             name={pokemonStats.name}
+             type={pokemonStats.types[0].type.name}
+           />)}
+         
+       </div>
+         <button className="load-more" onClick={() => dispatch(obtenerPokemons(loadNext))}>Load more</button>
+     </div>
+   </div>
+ );
 }
 
 export default PokemonList
